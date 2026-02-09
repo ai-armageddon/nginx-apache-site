@@ -22,7 +22,7 @@ fail() {
 print_usage() {
     cat <<'EOF'
 Usage:
-  create-web-site -d|--domain <domain> -s|--server <apache|nginx> [options]
+  create-web-site -d|--domain <domain> [-s|--server <apache|nginx|auto>] [options]
 
 Server shortcuts:
   create-apache-site -d|--domain <domain> [options]
@@ -30,7 +30,8 @@ Server shortcuts:
 
 Options:
   -d, --domain <domain>       Domain name to configure.
-  -s, --server <type>         Web server: apache or nginx.
+  -s, --server <type>         Web server: apache, nginx, or auto.
+      --auto                  Shortcut for --server auto.
       --apache                Shortcut for --server apache.
       --nginx                 Shortcut for --server nginx.
       --ssl                   Always request a Certbot certificate.
@@ -93,6 +94,15 @@ validate_domain() {
         || fail "Domain '${domain_name}' must include at least one dot."
 }
 
+validate_requested_server_type() {
+    case "${server_type}" in
+        ""|auto|apache|nginx) ;;
+        *)
+            fail "Unsupported server '${server_type}'. Use apache, nginx, or auto."
+            ;;
+    esac
+}
+
 validate_server_type() {
     case "${server_type}" in
         apache|nginx) ;;
@@ -100,6 +110,68 @@ validate_server_type() {
             fail "Unsupported server '${server_type}'. Use apache or nginx."
             ;;
     esac
+}
+
+prompt_for_server_type_if_needed() {
+    local selection
+
+    if [[ -n "${server_type}" ]]; then
+        return
+    fi
+
+    if [[ -t 0 ]]; then
+        read -r -p "Web server [auto/apache/nginx] (default: auto): " selection || true
+        selection="${selection,,}"
+        server_type="${selection:-auto}"
+    else
+        server_type="auto"
+    fi
+
+    validate_requested_server_type
+}
+
+resolve_auto_server_type() {
+    local apache_score=0
+    local nginx_score=0
+
+    if [[ "${server_type}" != "auto" ]]; then
+        return
+    fi
+
+    if [[ -d "${APACHE_AVAILABLE_DIR}" ]]; then
+        apache_score=$((apache_score + 2))
+    fi
+    if is_command_available "${A2ENSITE_BIN}"; then
+        apache_score=$((apache_score + 2))
+    fi
+    if [[ -d "/etc/apache2" ]]; then
+        apache_score=$((apache_score + 1))
+    fi
+
+    if [[ -d "${NGINX_AVAILABLE_DIR}" ]]; then
+        nginx_score=$((nginx_score + 2))
+    fi
+    if [[ -d "${NGINX_ENABLED_DIR}" ]]; then
+        nginx_score=$((nginx_score + 1))
+    fi
+    if is_command_available nginx; then
+        nginx_score=$((nginx_score + 1))
+    fi
+    if [[ -d "/etc/nginx" ]]; then
+        nginx_score=$((nginx_score + 1))
+    fi
+
+    if [[ "${nginx_score}" -eq 0 ]] && [[ "${apache_score}" -eq 0 ]]; then
+        fail "Auto-detection could not find Apache or Nginx. Use --server apache or --server nginx."
+    fi
+
+    if [[ "${nginx_score}" -ge "${apache_score}" ]]; then
+        server_type="nginx"
+    else
+        server_type="apache"
+    fi
+
+    printf 'Auto-selected server: %s\n' "${server_type}"
 }
 
 warn_if_not_root() {
@@ -280,6 +352,10 @@ while [[ $# -gt 0 ]]; do
             server_type="$2"
             shift 2
             ;;
+        --auto)
+            server_type="auto"
+            shift
+            ;;
         --apache)
             server_type="apache"
             shift
@@ -324,9 +400,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -n "${domain_name}" ]] || fail "You must provide -d|--domain."
-[[ -n "${server_type}" ]] || fail "You must provide -s|--server or use a wrapper command."
+
+server_type="${server_type,,}"
 
 validate_domain
+validate_requested_server_type
+prompt_for_server_type_if_needed
+resolve_auto_server_type
 validate_server_type
 decide_ssl_mode
 resolve_certbot_identity

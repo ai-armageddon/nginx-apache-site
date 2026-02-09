@@ -21,7 +21,12 @@ Unified command:
 ```bash
 create-web-site --domain example.com --server nginx
 create-web-site --domain example.com --server apache
+create-web-site --domain example.com --server auto
+create-web-site --domain example.com
 ```
+
+If `--server` is omitted, the CLI prompts on interactive terminals with default
+`auto`. In non-interactive runs, it defaults to `auto` directly.
 
 Compatibility wrappers:
 ```bash

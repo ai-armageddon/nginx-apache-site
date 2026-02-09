@@ -102,6 +102,22 @@ test_wrappers() {
     assert_file_exists "${WEB_SITE_NGINX_AVAILABLE_DIR}/wrapped-nginx.com.conf"
 }
 
+test_auto_server_mode() {
+    local sandbox="$1"
+    : > "${MOCK_LOG}"
+    setup_env "${sandbox}"
+
+    mkdir -p "${WEB_SITE_NGINX_AVAILABLE_DIR}" "${WEB_SITE_NGINX_ENABLED_DIR}"
+    export WEB_SITE_A2ENSITE_BIN="missing-a2ensite"
+
+    bash "${CLI}" --server auto --domain auto-mode.com --no-ssl
+    bash "${CLI}" --domain auto-default.com --no-ssl
+
+    assert_file_exists "${WEB_SITE_NGINX_AVAILABLE_DIR}/auto-mode.com.conf"
+    assert_file_exists "${WEB_SITE_NGINX_AVAILABLE_DIR}/auto-default.com.conf"
+    assert_contains "${MOCK_LOG}" "systemctl reload nginx"
+}
+
 main() {
     chmod +x "${CLI}" "${APACHE_WRAPPER}" "${NGINX_WRAPPER}"
 
@@ -118,6 +134,7 @@ main() {
     test_apache_no_ssl "${SANDBOX}"
     test_nginx_with_ssl "${SANDBOX}"
     test_wrappers "${SANDBOX}"
+    test_auto_server_mode "${SANDBOX}"
 
     echo "All tests passed."
 }
