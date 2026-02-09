@@ -1,6 +1,6 @@
 {
   "name": "nginx-apache-site",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create Apache or Nginx website configs and optional Certbot SSL certificates on Ubuntu.",
   "bin": {
     "nginx-apache-site": "script/create-web-site.sh",

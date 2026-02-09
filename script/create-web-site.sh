@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
 readonly PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 readonly STATIC_DIR="${PROJECT_DIR}/assets/static"
 readonly SERVER_TEMPLATE_DIR="${PROJECT_DIR}/assets/server"
