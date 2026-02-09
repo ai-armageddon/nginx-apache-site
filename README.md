@@ -59,7 +59,11 @@ create-web-site -d example.com -s nginx --ssl --dry-run
 ## Development tests
 ```bash
 npm test
+npm run test:linux
 ```
 
 `npm test` runs local shell tests with mocked system commands, so it does not
 modify your host web server setup.
+
+`npm run test:linux` adds Linux-specific smoke checks. CI runs both test suites
+on `ubuntu-latest` for every push and pull request.

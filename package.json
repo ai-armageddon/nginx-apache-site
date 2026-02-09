@@ -8,7 +8,8 @@
     "create-nginx-site": "./script/create-nginx-site.sh"
   },
   "scripts": {
-    "test": "bash tests/test-cli.sh"
+    "test": "bash tests/test-cli.sh",
+    "test:linux": "bash tests/linux-smoke.sh"
   },
   "keywords": [
     "apache",
