@@ -1,5 +1,5 @@
-# create-web-site
-`create-web-site` is a merged replacement for `create-apache-site` and
+# nginx-apache-site
+`nginx-apache-site` is a merged replacement for `create-apache-site` and
 `create-nginx-site`.
 
 It creates:
@@ -13,16 +13,16 @@ The package also ships compatibility wrappers:
 
 ## Install
 ```bash
-npm install -g create-web-site
+npm install -g nginx-apache-site
 ```
 
 ## Usage
 Unified command:
 ```bash
-create-web-site --domain example.com --server nginx
-create-web-site --domain example.com --server apache
-create-web-site --domain example.com --server auto
-create-web-site --domain example.com
+nginx-apache-site --domain example.com --server nginx
+nginx-apache-site --domain example.com --server apache
+nginx-apache-site --domain example.com --server auto
+nginx-apache-site --domain example.com
 ```
 
 If `--server` is omitted, the CLI prompts on interactive terminals with default
@@ -47,13 +47,13 @@ Extra Certbot controls:
 ## Common examples
 ```bash
 # Nginx with SSL and Certbot email
-create-web-site -d example.com -s nginx --ssl --certbot-email admin@example.com
+nginx-apache-site -d example.com -s nginx --ssl --certbot-email admin@example.com
 
 # Apache without SSL
-create-web-site -d example.com -s apache --no-ssl
+nginx-apache-site -d example.com -s apache --no-ssl
 
 # Preview actions only
-create-web-site -d example.com -s nginx --ssl --dry-run
+nginx-apache-site -d example.com -s nginx --ssl --dry-run
 ```
 
 ## Requirements

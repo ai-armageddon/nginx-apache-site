@@ -52,22 +52,21 @@ EOF
 main() {
     chmod +x "${CLI}"
 
-    local sandbox
-    sandbox="$(mktemp -d)"
-    trap 'rm -rf "${sandbox}"' EXIT
+    SANDBOX="$(mktemp -d)"
+    trap 'rm -rf "${SANDBOX}"' EXIT
 
-    local mock_bin="${sandbox}/mock-bin"
+    local mock_bin="${SANDBOX}/mock-bin"
     mkdir -p "${mock_bin}"
     create_mock_bin "${mock_bin}"
 
     export PATH="${mock_bin}:${PATH}"
-    export MOCK_LOG="${sandbox}/mock.log"
+    export MOCK_LOG="${SANDBOX}/mock.log"
     : > "${MOCK_LOG}"
 
-    export WEB_SITE_ROOT="${sandbox}/www"
-    export WEB_SITE_APACHE_AVAILABLE_DIR="${sandbox}/apache/sites-available"
-    export WEB_SITE_NGINX_AVAILABLE_DIR="${sandbox}/nginx/sites-available"
-    export WEB_SITE_NGINX_ENABLED_DIR="${sandbox}/nginx/sites-enabled"
+    export WEB_SITE_ROOT="${SANDBOX}/www"
+    export WEB_SITE_APACHE_AVAILABLE_DIR="${SANDBOX}/apache/sites-available"
+    export WEB_SITE_NGINX_AVAILABLE_DIR="${SANDBOX}/nginx/sites-available"
+    export WEB_SITE_NGINX_ENABLED_DIR="${SANDBOX}/nginx/sites-enabled"
     export WEB_SITE_SYSTEMCTL_BIN="systemctl"
     export WEB_SITE_A2ENSITE_BIN="a2ensite"
     export WEB_SITE_CERTBOT_BIN="certbot"

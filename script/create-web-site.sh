@@ -22,7 +22,7 @@ fail() {
 print_usage() {
     cat <<'EOF'
 Usage:
-  create-web-site -d|--domain <domain> [-s|--server <apache|nginx|auto>] [options]
+  nginx-apache-site -d|--domain <domain> [-s|--server <apache|nginx|auto>] [options]
 
 Server shortcuts:
   create-apache-site -d|--domain <domain> [options]

@@ -1,11 +1,11 @@
 {
-  "name": "create-web-site",
+  "name": "nginx-apache-site",
   "version": "1.0.0",
   "description": "Create Apache or Nginx website configs and optional Certbot SSL certificates on Ubuntu.",
   "bin": {
-    "create-web-site": "./script/create-web-site.sh",
-    "create-apache-site": "./script/create-apache-site.sh",
-    "create-nginx-site": "./script/create-nginx-site.sh"
+    "nginx-apache-site": "script/create-web-site.sh",
+    "create-apache-site": "script/create-apache-site.sh",
+    "create-nginx-site": "script/create-nginx-site.sh"
   },
   "scripts": {
     "test": "bash tests/test-cli.sh",
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ai-armageddon/create-web-site.git"
+    "url": "git+https://github.com/ai-armageddon/create-web-site.git"
   },
   "homepage": "https://github.com/ai-armageddon/create-web-site"
 }
