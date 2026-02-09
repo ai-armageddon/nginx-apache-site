@@ -1,0 +1,45 @@
+/* reset */
+* {
+    font-family: sans-serif;
+}
+*::selection {
+    background: #f00;
+    color: #fff;
+}
+
+    /* background-color: #3600d9; */
+
+body,
+    h1,
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Center align the content */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Style for the title */
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Style for the subtitle */
+    p {
+      font-size: 18px;
+      text-align: center;
+    }
+    
+    strong {
+        color: #ff0f33;
+    }
